@@ -14,31 +14,43 @@ namespace RestConsumer
 
         public void Start()
         {
-            var restDatas = GetAll();
-
-            foreach (Meassurement data in restDatas)
-            {
-                Console.WriteLine(data);
-            }
+            GetAll();
+            GetOne();
         }
 
-        private IList<Meassurement> GetAll()
+        private void GetAll()
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = client.GetStringAsync(URI).Result;
                 IList<Meassurement> cList = JsonConvert.DeserializeObject<IList<Meassurement>>(content);
-                return cList;
+                
+                foreach (Meassurement obj in clist)
+                {
+                    Console.WriteLine(obj);
+                }
             }
         }
 
-        private Meassurement GetOne(int id)
+        private void GetOne(int id)
         {
             using (HttpClient client = new HttpClient())
             {
                 string content = client.GetStringAsync(URI).Result;
                 Meassurement obj = JsonConvert.DeserializeObject<Meassurement>(content);
-                return obj;
+                
+                Console.WriteLine(obj);
+            }
+        }
+
+        private void PostOne()
+        {
+            Meassurement obj = new Meassurement();
+
+            using (HttpClient client = new HttpClient())
+            {
+                string content = new StringContent(obj, Encoding.UTF8, "application/json");
+                client.PostAsync(URI, content);
             }
         }
     }
